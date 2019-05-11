@@ -3,6 +3,7 @@
 const int n=9;
 using namespace std;
 
+
 void func1(int arr[n][n])
 {
     ofstream file;
@@ -75,6 +76,19 @@ void func3(int arr[n][n])
     system("demo3.png");
 }
 
+
+
+/*
+structure of nodes used in binomial heap 
+ start= starting vertex
+ endv= end vertex
+ data= weight of edge connecting start and endv vertices
+ cp= child pointer
+ rp= right pointer
+ lp= left pointer 
+ 
+ */
+
 struct node{
     int start,endv,data,order;
     node *cp,*rp,*lp;
@@ -93,7 +107,9 @@ node* newnode(int start,int endv,int data)
     return ptr;
 }
 
+// enterData() function enter nodes into binomial heap
 
+//minptr is a pointer of min node with min wts
 
 pack* enterData(int start,int endv,int data,node *head,node *minptr)
 {
@@ -162,11 +178,10 @@ node* add(node *temp2,node *head)
     return head;
 }
 
+//merge two heap to make a binomial heap after extraction of minptr
 
 node* merge(node *head,int nodenum)
 {
-   // node *htemp=head;
-
     int maxsize=(log(nodenum)/log(2))+1;
     node *arr[maxsize];
     for(int i=0;i<maxsize;i++)
@@ -176,28 +191,21 @@ node* merge(node *head,int nodenum)
     {
         int order=head->order;
         if(arr[order]==NULL){
-           // cout<<"inside if: head="<<head->data<<"\n";
             arr[order]=head; head=head->rp;
         }
         else
         {
             if(head==arr[order])
                 return head;
-            //cout<<"inside else: head="<<head->data<<"\n";
-            //int counter=0;
-            //if(htemp==arr[order] || htemp==head)
-               // counter=1;
 
             head=add(arr[order],head);
-           // if(counter==1)
-            //    htemp=head;
-
             arr[order]=NULL;
         }
 
     }
 }
 
+//ectracting minptr
 node* deletemin(node *head,node *minptr,int nodenum)
 {
 
@@ -221,7 +229,6 @@ node* deletemin(node *head,node *minptr,int nodenum)
              (minptr->rp)->lp=temp;
              temp->rp=minptr->rp;
          }
-                            cout<<"when min is removed:\n";
                            node *t=head;
                             while(1)
                             {
@@ -232,12 +239,12 @@ node* deletemin(node *head,node *minptr,int nodenum)
                             }
 
     head=merge(head,nodenum);
-   // cout<<"inside deletemin head="<<head->data<<"\n";
     return head;
 
 
 }
 
+//setting new minptr after extraction
 node* setmin(node *head,node *minptr)
 {
     if(head==NULL)
@@ -257,6 +264,7 @@ node* setmin(node *head,node *minptr)
 }
 
 
+// function to find mst using binomial heap
 void find_mst(int arr[n][n],int mst[n][n])
 {
     pack *p;
@@ -285,7 +293,6 @@ void find_mst(int arr[n][n],int mst[n][n])
                  head=p->head; minptr=p->minptr;
             }
         }
-      //  cout<<"after insertions with "<<current_vrtx<<":\n";
         cout<<"\n"; node *t=head;
                             while(1)
                             {
@@ -297,9 +304,6 @@ void find_mst(int arr[n][n],int mst[n][n])
 
                             cout<<"\n";
 
-        //deletemin
-
-        //  nodenum--;
           if(vertex[minptr->endv]==1)
           {
               while(1)
@@ -322,10 +326,7 @@ void find_mst(int arr[n][n],int mst[n][n])
 
             nodenum--;
             head=deletemin(head,minptr,nodenum);
-           // cout<<"just after delete head="<<head<<"\n";
             minptr=setmin(head,minptr);
-
-//cout<<"after delete:\n"; cout<<"head="<<head<<"\n";
                            t=head;
                            while(1)
                             {
@@ -374,6 +375,8 @@ int main()
         }
     }
     find_mst(arr,mst);
+    
+    
     func2(mst);
     cout<<"\n";
     for(int i=0;i<n;i++)
@@ -384,7 +387,7 @@ int main()
         }
         cout<<"\n";
     }
-
+//mst 2-d array contains mst
 
 
 // continue from here...........
@@ -430,6 +433,10 @@ int main()
     }
 
     cout<<"\n";
+    
+    
+    //final graph after adding alternates path for each metro stations
+    
     for(int i=0;i<n;i++)
     {
         for(int j=0;j<n;j++)
@@ -438,6 +445,7 @@ int main()
         }
         cout<<"\n";
     }
+    
     func3(finalnet);
 
 
